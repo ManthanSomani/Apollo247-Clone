@@ -10,13 +10,19 @@ app.use(cors());
 app.use(express.json());
 
 console.log(process.env.MONGO_URI)
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('MongoDB Connected');
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+};
+connectDB();
 
 app.use('/api', doctorRoutes);
 
-app.listen(4000, () => {
+app.listen(process.env.PORT, () => {
   console.log('Backend running on http://localhost:4000');
 });
